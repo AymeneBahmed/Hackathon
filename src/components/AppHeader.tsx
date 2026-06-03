@@ -12,7 +12,9 @@ export function AppHeader() {
   useEffect(() => {
     let active = true;
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!active || !user) return;
       setEmail(user.email ?? null);
       const { data } = await supabase
@@ -24,7 +26,9 @@ export function AppHeader() {
       setStreak(data?.current_streak ?? 0);
       setXp(data?.xp ?? 0);
     })();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function logout() {
@@ -36,13 +40,33 @@ export function AppHeader() {
     <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-30">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-lg bg-foreground text-background font-display text-base font-bold">L</div>
+          <div className="grid h-8 w-8 place-items-center rounded-lg bg-foreground text-background font-display text-base font-bold">
+            L
+          </div>
           <span className="font-display text-base font-semibold">Language Living</span>
         </Link>
         <nav className="hidden items-center gap-1 text-sm md:flex">
-          <Link to="/dashboard" className="rounded-full px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-muted font-semibold" }}>Scenarios</Link>
-          <Link to="/progress" className="rounded-full px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-muted font-semibold" }}>Progress</Link>
-          <Link to="/profile" className="rounded-full px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-muted font-semibold" }}>Profile</Link>
+          <Link
+            to="/dashboard"
+            className="rounded-full px-3 py-1.5 hover:bg-muted"
+            activeProps={{ className: "bg-muted font-semibold" }}
+          >
+            Scenarios
+          </Link>
+          <Link
+            to="/progress"
+            className="rounded-full px-3 py-1.5 hover:bg-muted"
+            activeProps={{ className: "bg-muted font-semibold" }}
+          >
+            Progress
+          </Link>
+          <Link
+            to="/profile"
+            className="rounded-full px-3 py-1.5 hover:bg-muted"
+            activeProps={{ className: "bg-muted font-semibold" }}
+          >
+            Profile
+          </Link>
         </nav>
         <div className="flex items-center gap-3">
           {streak !== null && (

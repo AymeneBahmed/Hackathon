@@ -47,7 +47,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">Something went wrong</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          Something went wrong
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -77,21 +79,44 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Language Living AI — Learn by living the language" },
-      { name: "description", content: "Practice real-life conversations in any language with adaptive AI tutors. Order coffee, ace an interview, travel the world." },
+      {
+        name: "description",
+        content:
+          "Practice real-life conversations in any language with adaptive AI tutors. Order coffee, ace an interview, travel the world.",
+      },
       { property: "og:title", content: "Language Living AI — Learn by living the language" },
-      { property: "og:description", content: "Practice real-life conversations in any language with adaptive AI tutors. Order coffee, ace an interview, travel the world." },
+      {
+        property: "og:description",
+        content:
+          "Practice real-life conversations in any language with adaptive AI tutors. Order coffee, ace an interview, travel the world.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Language Living AI — Learn by living the language" },
-      { name: "twitter:description", content: "Practice real-life conversations in any language with adaptive AI tutors. Order coffee, ace an interview, travel the world." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/da3fddd5-09da-4065-9319-0ffd83e85bd8/id-preview-f50c8e8d--e9aebd3a-26fd-4f99-8c31-7cc34c30f8cf.lovable.app-1780344813310.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/da3fddd5-09da-4065-9319-0ffd83e85bd8/id-preview-f50c8e8d--e9aebd3a-26fd-4f99-8c31-7cc34c30f8cf.lovable.app-1780344813310.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Practice real-life conversations in any language with adaptive AI tutors. Order coffee, ace an interview, travel the world.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/da3fddd5-09da-4065-9319-0ffd83e85bd8/id-preview-f50c8e8d--e9aebd3a-26fd-4f99-8c31-7cc34c30f8cf.lovable.app-1780344813310.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/da3fddd5-09da-4065-9319-0ffd83e85bd8/id-preview-f50c8e8d--e9aebd3a-26fd-4f99-8c31-7cc34c30f8cf.lovable.app-1780344813310.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -118,7 +143,9 @@ function AuthListener() {
   const router = useRouter();
   const qc = useQueryClient();
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
       router.invalidate();
       qc.invalidateQueries();
     });

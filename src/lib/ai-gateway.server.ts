@@ -31,7 +31,8 @@ export async function aiJSON<T = unknown>(opts: {
   if (!res.ok) {
     const text = await res.text();
     if (res.status === 429) throw new Error("AI rate limit reached. Try again in a moment.");
-    if (res.status === 402) throw new Error("AI credits exhausted. Add credits in Workspace settings.");
+    if (res.status === 402)
+      throw new Error("AI credits exhausted. Add credits in Workspace settings.");
     throw new Error(`AI error (${res.status}): ${text.slice(0, 200)}`);
   }
   const data = await res.json();

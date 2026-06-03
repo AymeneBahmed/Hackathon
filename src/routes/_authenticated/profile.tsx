@@ -30,10 +30,16 @@ function ProfilePage() {
           </dl>
         )}
         <div className="mt-6 flex gap-3">
-          <Link to="/onboarding" className="rounded-full border border-border px-4 py-2 text-sm font-medium hover:bg-muted">
+          <Link
+            to="/onboarding"
+            className="rounded-full border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
             Edit preferences
           </Link>
-          <Link to="/placement" className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+          <Link
+            to="/placement"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
             Retake placement
           </Link>
         </div>
@@ -45,7 +51,9 @@ function ProfilePage() {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <>
-      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
+      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </dt>
       <dd className="font-medium">{value}</dd>
     </>
   );

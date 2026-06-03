@@ -5,24 +5,51 @@ import { useQuery } from "@tanstack/react-query";
 import { getSession } from "@/lib/sessions.functions";
 import { sendChatMessage, openingLine } from "@/lib/chat.functions";
 import { toast } from "sonner";
-import { ArrowLeft, Languages, Loader2, Mic, MicOff, Send, Sparkles, Volume2, VolumeX, Square } from "lucide-react";
+import {
+  ArrowLeft,
+  Languages,
+  Loader2,
+  Mic,
+  MicOff,
+  Send,
+  Sparkles,
+  Volume2,
+  VolumeX,
+  Square,
+} from "lucide-react";
 import { translateText } from "@/lib/translate.functions";
 
 const AUTO_TTS_KEY = "ll:autoSpeak";
 
 // Map CEFR target language names to BCP-47 codes for SpeechRecognition
 const LANG_MAP: Record<string, string> = {
-  English: "en-US", Spanish: "es-ES", French: "fr-FR", German: "de-DE",
-  Italian: "it-IT", Portuguese: "pt-PT", Japanese: "ja-JP", Korean: "ko-KR",
-  Chinese: "zh-CN", Mandarin: "zh-CN", Russian: "ru-RU", Dutch: "nl-NL",
-  Polish: "pl-PL", Turkish: "tr-TR", Arabic: "ar-SA", Hindi: "hi-IN",
+  English: "en-US",
+  Spanish: "es-ES",
+  French: "fr-FR",
+  German: "de-DE",
+  Italian: "it-IT",
+  Portuguese: "pt-PT",
+  Japanese: "ja-JP",
+  Korean: "ko-KR",
+  Chinese: "zh-CN",
+  Mandarin: "zh-CN",
+  Russian: "ru-RU",
+  Dutch: "nl-NL",
+  Polish: "pl-PL",
+  Turkish: "tr-TR",
+  Arabic: "ar-SA",
+  Hindi: "hi-IN",
 };
 
 type SpeechRecognitionLike = {
   lang: string;
   interimResults: boolean;
   continuous: boolean;
-  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null;
+  onresult:
+    | ((e: {
+        results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }>;
+      }) => void)
+    | null;
   onerror: ((e: { error: string }) => void) | null;
   onend: (() => void) | null;
   start: () => void;
@@ -55,7 +82,12 @@ function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
-  const [score, setScore] = useState<{ accuracy: number; fluency: number; vocabulary: number; overall: number } | null>(null);
+  const [score, setScore] = useState<{
+    accuracy: number;
+    fluency: number;
+    vocabulary: number;
+    overall: number;
+  } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const seededRef = useRef(false);
@@ -68,18 +100,31 @@ function ChatPage() {
   const ttsSupported = typeof window !== "undefined" && "speechSynthesis" in window;
 
   useEffect(() => {
-    const SR = (window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike }).SpeechRecognition
-      ?? (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognitionLike }).webkitSpeechRecognition;
+    const SR =
+      (
+        window as unknown as {
+          SpeechRecognition?: new () => SpeechRecognitionLike;
+          webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+        }
+      ).SpeechRecognition ??
+      (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognitionLike })
+        .webkitSpeechRecognition;
     setSpeechSupported(!!SR);
     try {
       setAutoSpeak(localStorage.getItem(AUTO_TTS_KEY) === "1");
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   function toggleAutoSpeak() {
     setAutoSpeak((prev) => {
       const next = !prev;
-      try { localStorage.setItem(AUTO_TTS_KEY, next ? "1" : "0"); } catch { /* ignore */ }
+      try {
+        localStorage.setItem(AUTO_TTS_KEY, next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
       if (!next && ttsSupported) window.speechSynthesis.cancel();
       return next;
     });
@@ -90,14 +135,23 @@ function ChatPage() {
       recognitionRef.current?.stop();
       return;
     }
-    const SR = (window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike }).SpeechRecognition
-      ?? (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognitionLike }).webkitSpeechRecognition;
+    const SR =
+      (
+        window as unknown as {
+          SpeechRecognition?: new () => SpeechRecognitionLike;
+          webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+        }
+      ).SpeechRecognition ??
+      (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognitionLike })
+        .webkitSpeechRecognition;
     if (!SR) {
       toast.error("Speech recognition is not supported in this browser");
       return;
     }
     const rec = new SR();
-    const targetLang = (sessionQ.data?.session as { scenarios?: { target_language?: string } } | undefined)?.scenarios?.target_language;
+    const targetLang = (
+      sessionQ.data?.session as { scenarios?: { target_language?: string } } | undefined
+    )?.scenarios?.target_language;
     rec.lang = (targetLang && LANG_MAP[targetLang]) || navigator.language || "en-US";
     rec.interimResults = true;
     rec.continuous = true;
@@ -138,7 +192,9 @@ function ChatPage() {
       const msgs = sessionQ.data.messages as ChatMessage[];
       if (!historyLoadedRef.current) {
         // Mark pre-existing history as already-spoken (only on first load)
-        msgs.forEach((m) => { if (m.role === "assistant") spokenIdsRef.current.add(m.id); });
+        msgs.forEach((m) => {
+          if (m.role === "assistant") spokenIdsRef.current.add(m.id);
+        });
         historyLoadedRef.current = true;
       }
       setMessages(msgs);
@@ -171,7 +227,9 @@ function ChatPage() {
     synth.cancel();
     const u = new SpeechSynthesisUtterance(last.content);
     u.lang = ttsLangRef.current;
-    const match = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith(ttsLangRef.current.slice(0, 2).toLowerCase()));
+    const match = synth
+      .getVoices()
+      .find((v) => v.lang?.toLowerCase().startsWith(ttsLangRef.current.slice(0, 2).toLowerCase()));
     if (match) u.voice = match;
     u.rate = 0.95;
     synth.speak(u);
@@ -199,7 +257,13 @@ function ChatPage() {
     const tempUserId = `tmp-${Date.now()}`;
     setMessages((m) => [
       ...m,
-      { id: tempUserId, role: "user", content: text, correction: null, created_at: new Date().toISOString() },
+      {
+        id: tempUserId,
+        role: "user",
+        content: text,
+        correction: null,
+        created_at: new Date().toISOString(),
+      },
     ]);
     try {
       const result = await sendMsg({ data: { sessionId, message: text } });
@@ -207,8 +271,20 @@ function ChatPage() {
       setMessages((m) => {
         const next = m.filter((x) => x.id !== tempUserId);
         next.push(
-          { id: result.userMessageId, role: "user", content: text, correction: null, created_at: new Date().toISOString() },
-          { id: result.assistantMessageId, role: "assistant", content: result.reply, correction: result.correction, created_at: new Date().toISOString() },
+          {
+            id: result.userMessageId,
+            role: "user",
+            content: text,
+            correction: null,
+            created_at: new Date().toISOString(),
+          },
+          {
+            id: result.assistantMessageId,
+            role: "assistant",
+            content: result.reply,
+            correction: result.correction,
+            created_at: new Date().toISOString(),
+          },
         );
         return next;
       });
@@ -220,7 +296,9 @@ function ChatPage() {
     }
   }
 
-  const session = sessionQ.data?.session as (Record<string, unknown> & { scenarios: Record<string, string> }) | undefined;
+  const session = sessionQ.data?.session as
+    | (Record<string, unknown> & { scenarios: Record<string, string> })
+    | undefined;
   const scenario = session?.scenarios;
   const ttsLang = (scenario?.target_language && LANG_MAP[scenario.target_language]) || "en-US";
   ttsLangRef.current = ttsLang;
@@ -230,13 +308,18 @@ function ChatPage() {
       {/* Scenario card */}
       {scenario && (
         <div className="mb-3 flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
-          <Link to="/dashboard" className="grid h-8 w-8 place-items-center rounded-full hover:bg-muted">
+          <Link
+            to="/dashboard"
+            className="grid h-8 w-8 place-items-center rounded-full hover:bg-muted"
+          >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div className="text-2xl">{scenario.emoji}</div>
           <div className="flex-1">
             <div className="font-display text-base font-semibold">{scenario.title}</div>
-            <div className="text-xs text-muted-foreground">{scenario.character_name} · {scenario.character_role} · CEFR {scenario.difficulty}</div>
+            <div className="text-xs text-muted-foreground">
+              {scenario.character_name} · {scenario.character_role} · CEFR {scenario.difficulty}
+            </div>
           </div>
           {score && (
             <div className="hidden items-center gap-2 sm:flex">
@@ -253,7 +336,9 @@ function ChatPage() {
               aria-label={autoSpeak ? "Disable auto voice replies" : "Enable auto voice replies"}
               title={autoSpeak ? "Auto-speak: On" : "Auto-speak: Off"}
               className={`grid h-9 w-9 place-items-center rounded-full border border-border transition-colors ${
-                autoSpeak ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted text-muted-foreground"
+                autoSpeak
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background hover:bg-muted text-muted-foreground"
               }`}
             >
               {autoSpeak ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
@@ -263,7 +348,10 @@ function ChatPage() {
       )}
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto rounded-2xl border border-border bg-card p-4">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto rounded-2xl border border-border bg-card p-4"
+      >
         {messages.length === 0 && (
           <div className="grid h-full place-items-center text-center text-muted-foreground">
             <div>
@@ -286,7 +374,10 @@ function ChatPage() {
 
       {/* Composer */}
       <form
-        onSubmit={(e) => { e.preventDefault(); send(); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          send();
+        }}
         className="mt-3 flex items-end gap-2 rounded-2xl border border-border bg-card p-2"
       >
         <textarea
@@ -294,7 +385,10 @@ function ChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              send();
+            }
           }}
           placeholder={scenario ? `Reply to ${scenario.character_name}...` : "Type a message..."}
           rows={1}
@@ -347,7 +441,9 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
     synth.cancel();
     const u = new SpeechSynthesisUtterance(m.content);
     u.lang = ttsLang;
-    const match = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith(ttsLang.slice(0, 2).toLowerCase()));
+    const match = synth
+      .getVoices()
+      .find((v) => v.lang?.toLowerCase().startsWith(ttsLang.slice(0, 2).toLowerCase()));
     if (match) u.voice = match;
     u.rate = 0.95;
     u.onend = () => setSpeaking(false);
@@ -358,7 +454,10 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
 
   async function handleTranslate() {
     if (translating) return;
-    if (translation) { setTranslation(null); return; }
+    if (translation) {
+      setTranslation(null);
+      return;
+    }
     setTranslating(true);
     try {
       const res = await translate({ data: { text: m.content, targetLanguage: "Arabic" } });
@@ -376,7 +475,9 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
         <div className={`flex items-end gap-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
           <div
             className={`rounded-2xl px-4 py-2.5 text-sm ${
-              isUser ? "rounded-tr-sm bg-primary text-primary-foreground" : "rounded-tl-sm bg-muted text-foreground"
+              isUser
+                ? "rounded-tr-sm bg-primary text-primary-foreground"
+                : "rounded-tl-sm bg-muted text-foreground"
             }`}
           >
             {m.content}
@@ -389,10 +490,16 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
                 aria-label={speaking ? "Stop playback" : "Listen to message"}
                 title={speaking ? "Stop" : "Listen"}
                 className={`grid h-8 w-8 place-items-center rounded-full border border-border transition-colors ${
-                  speaking ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted text-muted-foreground"
+                  speaking
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-background hover:bg-muted text-muted-foreground"
                 }`}
               >
-                {speaking ? <Square className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                {speaking ? (
+                  <Square className="h-3.5 w-3.5" />
+                ) : (
+                  <Volume2 className="h-3.5 w-3.5" />
+                )}
               </button>
             )}
             <button
@@ -402,10 +509,16 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
               aria-label={translation ? "Hide Arabic translation" : "Translate to Arabic"}
               title={translation ? "Hide translation" : "Translate to Arabic"}
               className={`grid h-8 w-8 place-items-center rounded-full border border-border transition-colors disabled:opacity-50 ${
-                translation ? "bg-accent text-accent-foreground" : "bg-background hover:bg-muted text-muted-foreground"
+                translation
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-background hover:bg-muted text-muted-foreground"
               }`}
             >
-              {translating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Languages className="h-3.5 w-3.5" />}
+              {translating ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Languages className="h-3.5 w-3.5" />
+              )}
             </button>
           </div>
         </div>
@@ -421,7 +534,9 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
         {m.correction && (
           <div className="rounded-xl border border-accent/30 bg-accent/10 px-3 py-2 text-xs">
             <div className="font-semibold text-accent">Gentle correction</div>
-            <div className="mt-1"><span className="line-through opacity-70">{m.correction.original}</span></div>
+            <div className="mt-1">
+              <span className="line-through opacity-70">{m.correction.original}</span>
+            </div>
             <div className="font-medium">→ {m.correction.corrected}</div>
             <div className="mt-1 italic text-muted-foreground">{m.correction.explanation}</div>
           </div>
@@ -431,11 +546,17 @@ function MessageBubble({ m, ttsLang }: { m: ChatMessage; ttsLang: string }) {
   );
 }
 
-
 function ScorePill({ label, v }: { label: string; v: number }) {
-  const tone = v >= 80 ? "bg-accent/20 text-accent-foreground" : v >= 60 ? "bg-primary/15" : "bg-destructive/15";
+  const tone =
+    v >= 80
+      ? "bg-accent/20 text-accent-foreground"
+      : v >= 60
+        ? "bg-primary/15"
+        : "bg-destructive/15";
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${tone}`}>{label} {v}</span>
+    <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${tone}`}>
+      {label} {v}
+    </span>
   );
 }
 

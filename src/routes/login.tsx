@@ -61,9 +61,14 @@ function LoginPage() {
 
   return (
     <div className="grid min-h-screen md:grid-cols-2">
-      <aside className="relative hidden flex-col justify-between p-10 md:flex" style={{ background: "var(--gradient-warm)" }}>
+      <aside
+        className="relative hidden flex-col justify-between p-10 md:flex"
+        style={{ background: "var(--gradient-warm)" }}
+      >
         <Link to="/" className="flex items-center gap-2 text-primary-foreground">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-background font-display text-lg font-bold">L</div>
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-background font-display text-lg font-bold">
+            L
+          </div>
           <span className="font-display text-lg font-semibold">Language Living</span>
         </Link>
         <div className="text-primary-foreground">
@@ -72,7 +77,9 @@ function LoginPage() {
           </p>
           <p className="mt-4 text-sm opacity-80">— Maya, learning Italian for 3 weeks</p>
         </div>
-        <span className="text-xs text-primary-foreground/70">© {new Date().getFullYear()} Language Living AI</span>
+        <span className="text-xs text-primary-foreground/70">
+          © {new Date().getFullYear()} Language Living AI
+        </span>
       </aside>
 
       <main className="flex flex-col items-center justify-center bg-background p-8">
@@ -81,7 +88,9 @@ function LoginPage() {
             {mode === "signin" ? "Welcome back" : "Create your account"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {mode === "signin" ? "Pick up your streak where you left off." : "Free to start. No credit card."}
+            {mode === "signin"
+              ? "Pick up your streak where you left off."
+              : "Free to start. No credit card."}
           </p>
 
           <button
@@ -90,13 +99,17 @@ function LoginPage() {
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium hover:bg-muted disabled:opacity-50"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden>
-              <path fill="#EA4335" d="M12 11v3.2h5.4c-.2 1.4-1.6 4.1-5.4 4.1-3.2 0-5.9-2.7-5.9-6s2.7-6 5.9-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.8 14.6 3 12 3 6.9 3 2.8 7.1 2.8 12.2S6.9 21.4 12 21.4c6.9 0 9.4-4.9 9.4-7.4 0-.5 0-.9-.1-1.3H12z" />
+              <path
+                fill="#EA4335"
+                d="M12 11v3.2h5.4c-.2 1.4-1.6 4.1-5.4 4.1-3.2 0-5.9-2.7-5.9-6s2.7-6 5.9-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.8 14.6 3 12 3 6.9 3 2.8 7.1 2.8 12.2S6.9 21.4 12 21.4c6.9 0 9.4-4.9 9.4-7.4 0-.5 0-.9-.1-1.3H12z"
+              />
             </svg>
             Continue with Google
           </button>
 
           <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-            <div className="h-px flex-1 bg-border" /> or email <div className="h-px flex-1 bg-border" />
+            <div className="h-px flex-1 bg-border" /> or email{" "}
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           <form onSubmit={onEmail} className="space-y-3">

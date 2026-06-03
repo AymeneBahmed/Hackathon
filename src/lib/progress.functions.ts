@@ -8,7 +8,11 @@ export const getProgressOverview = createServerFn({ method: "GET" })
     const since = new Date(Date.now() - 30 * 86400000).toISOString();
 
     const [profileRes, sessionsRes] = await Promise.all([
-      supabase.from("profiles").select("xp,current_streak,level,strengths,weaknesses").eq("id", userId).maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("xp,current_streak,level,strengths,weaknesses")
+        .eq("id", userId)
+        .maybeSingle(),
       supabase
         .from("sessions")
         .select("id,title,created_at,last_score")

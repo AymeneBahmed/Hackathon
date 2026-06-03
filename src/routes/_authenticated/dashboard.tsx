@@ -45,7 +45,10 @@ function Dashboard() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <section className="rounded-3xl border border-border p-6 md:p-8" style={{ background: "var(--gradient-warm)" }}>
+      <section
+        className="rounded-3xl border border-border p-6 md:p-8"
+        style={{ background: "var(--gradient-warm)" }}
+      >
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-primary-foreground/80">
@@ -68,7 +71,8 @@ function Dashboard() {
           <h2 className="font-display text-2xl font-semibold">Continue practicing</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {sessions.slice(0, 6).map((s) => {
-              const sc = (s as { scenarios: { emoji: string; difficulty: string } | null }).scenarios;
+              const sc = (s as { scenarios: { emoji: string; difficulty: string } | null })
+                .scenarios;
               return (
                 <button
                   key={s.id}
@@ -77,7 +81,9 @@ function Dashboard() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="text-3xl">{sc?.emoji ?? "💬"}</div>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">{sc?.difficulty ?? "—"}</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+                      {sc?.difficulty ?? "—"}
+                    </span>
                   </div>
                   <div className="mt-3 font-display text-lg font-semibold">{s.title}</div>
                   <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
@@ -97,10 +103,15 @@ function Dashboard() {
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {scenarios.map((s) => (
-            <article key={s.id} className="group rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]">
+            <article
+              key={s.id}
+              className="group rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
+            >
               <div className="flex items-center justify-between">
                 <div className="text-4xl">{s.emoji}</div>
-                <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">CEFR · {s.difficulty}</span>
+                <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
+                  CEFR · {s.difficulty}
+                </span>
               </div>
               <h3 className="mt-4 font-display text-xl font-semibold">{s.title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
@@ -110,7 +121,13 @@ function Dashboard() {
                 disabled={starting === s.slug}
                 className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
               >
-                {starting === s.slug ? "Starting..." : (<><Plus className="h-4 w-4" /> Start scene</>)}
+                {starting === s.slug ? (
+                  "Starting..."
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" /> Start scene
+                  </>
+                )}
               </button>
             </article>
           ))}
@@ -123,7 +140,9 @@ function Dashboard() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl bg-background/90 px-4 py-3 text-center">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
       <div className="font-display text-xl font-semibold">{value}</div>
     </div>
   );
